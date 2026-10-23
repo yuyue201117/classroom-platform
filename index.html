@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#245da8">
+  <meta name="description" content="班級數位平台：抽座位、班級公告、考試倒數與成績計算器">
+  <title>班級數位平台</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home">
+      <span class="brand-icon">C</span>
+      <span>CLASSROOM <small>班級數位平台</small></span>
+    </a>
+    <button id="adminButton" class="button button-outline" type="button">
+      管理者登入
+    </button>
+  </header>
+
+  <main class="container">
+    <section id="home" class="hero">
+      <div class="hero-content">
+        <span class="eyebrow">OUR CLASS · OUR SPACE</span>
+        <h1>讓班級生活<br>更有條理。</h1>
+        <p>公告、考試、座位與成績，一站完成。</p>
+        <a class="button button-primary" href="#tools">開始使用　→</a>
+      </div>
+      <div class="hero-card">
+        <span class="hero-card-label">TODAY</span>
+        <div id="todayDate" class="today-date">載入中…</div>
+        <div class="hero-divider"></div>
+        <p>每天進步一點，累積更好的自己。</p>
+        <span class="hero-decoration">✦</span>
+      </div>
+    </section>
+
+    <section class="section" id="tools">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">CLASSROOM TOOLS</span>
+          <h2>班級工具</h2>
+        </div>
+        <span class="section-note">學習與班級事務管理</span>
+      </div>
+
+      <nav class="tool-grid" aria-label="班級功能">
+        <a class="tool-card" href="#seats">
+          <span class="tool-icon icon-blue">▦</span>
+          <h3>抽座位系統</h3>
+          <p>整理名單，公平抽選座位。</p>
+          <span class="tool-link">前往使用 →</span>
+        </a>
+        <a class="tool-card" href="#announcements">
+          <span class="tool-icon icon-gold">▤</span>
+          <h3>班級公告</h3>
+          <p>查看班級通知與重要事項。</p>
+          <span class="tool-link">前往查看 →</span>
+        </a>
+        <a class="tool-card" href="#exams">
+          <span class="tool-icon icon-green">◷</span>
+          <h3>考試倒數</h3>
+          <p>掌握考試日期，提前準備。</p>
+          <span class="tool-link">查看倒數 →</span>
+        </a>
+        <a class="tool-card" href="#grades">
+          <span class="tool-icon icon-purple">∑</span>
+          <h3>成績計算器</h3>
+          <p>計算平均成績與科目權重。</p>
+          <span class="tool-link">前往計算 →</span>
+        </a>
+      </nav>
+    </section>
+
+    <section class="section" id="seats">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">SEATING LOTTERY</span>
+          <h2>抽座位系統</h2>
+          <p class="section-description">輸入學生姓名，每個座位最多安排一人。</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="field">
+          <label for="studentNames">學生名單（每行輸入一位）</label>
+          <textarea id="studentNames" rows="6"
+            placeholder="王小明&#10;陳小華&#10;林小美"></textarea>
+          <p class="help-text">請先確認姓名沒有重複，再產生座位。</p>
+        </div>
+
+        <div class="inline-fields">
+          <div class="field">
+            <label for="seatRows">座位排數</label>
+            <input id="seatRows" type="number" min="1" max="10" value="6">
+          </div>
+          <div class="field">
+            <label for="seatCols">每排座位數</label>
+            <input id="seatCols" type="number" min="1" max="10" value="6">
+          </div>
+        </div>
+
+        <label class="check-row">
+          <input id="blockedSeats" type="checkbox" checked>
+          將第 6 排第 1 與第 6 個座位設為不可坐（6×6 時）
+        </label>
+
+        <div class="button-row">
+          <button id="prepareSeats" class="button button-primary" type="button">
+            產生座位
+          </button>
+          <button id="drawNext" class="button button-secondary" type="button" disabled>
+            抽出下一位
+          </button>
+          <button id="resetSeats" class="button button-outline" type="button" disabled>
+            重新抽籤
+          </button>
+        </div>
+
+        <p id="seatStatus" class="status-message" role="status" aria-live="polite">
+          請輸入名單並產生座位。
+        </p>
+        <div id="seatResult" class="seat-result" aria-live="polite"></div>
+        <div id="seatGrid" class="seat-grid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="announcements">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">CLASS ANNOUNCEMENTS</span>
+          <h2>班級公告</h2>
+          <p class="section-description">最新通知集中管理，不再錯過重要事項。</p>
+        </div>
+      </div>
+
+      <div id="announcementEditor" class="panel editor hidden">
+        <h3>新增班級公告</h3>
+        <form id="announcementForm">
+          <div class="field">
+            <label for="announcementTitle">公告標題</label>
+            <input id="announcementTitle" maxlength="100" required
+              placeholder="例如：班會時間調整">
+          </div>
+          <div class="field">
+            <label for="announcementContent">公告內容</label>
+            <textarea id="announcementContent" rows="3" maxlength="2000"
+              required placeholder="請輸入公告內容"></textarea>
+          </div>
+          <button class="button button-primary" type="submit">發布公告</button>
+        </form>
+      </div>
+
+      <div id="announcementList" class="announcement-list"></div>
+    </section>
+
+    <section class="section" id="exams">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">EXAM COUNTDOWN</span>
+          <h2>考試倒數</h2>
+          <p class="section-description">規劃讀書進度，準備每一次挑戰。</p>
+        </div>
+      </div>
+
+      <div id="examEditor" class="panel editor hidden">
+        <h3>新增考試</h3>
+        <form id="examForm">
+          <div class="field">
+            <label for="examName">考試名稱</label>
+            <input id="examName" maxlength="100" required
+              placeholder="例如：第一次段考">
+          </div>
+          <div class="field">
+            <label for="examDate">考試日期</label>
+            <input id="examDate" type="date" required>
+          </div>
+          <button class="button button-primary" type="submit">新增考試</button>
+        </form>
+      </div>
+
+      <div id="examList" class="exam-grid"></div>
+    </section>
+
+    <section class="section" id="grades">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">GRADE CALCULATOR</span>
+          <h2>成績計算器</h2>
+          <p class="section-description">輸入成績與權重，即時計算加權平均。</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="privacy-note">
+          <strong>使用提醒</strong>
+          <p>請勿在公開網站輸入真實姓名對應的個人成績。這項工具只在目前瀏覽器計算，不會自動傳給老師或其他同學。</p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="grade-table">
+            <thead>
+              <tr>
+                <th>科目</th>
+                <th>成績</th>
+                <th>權重</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="gradeRows"></tbody>
+          </table>
+        </div>
+
+        <div class="button-row">
+          <button id="addGrade" class="button button-secondary" type="button">
+            ＋ 新增科目
+          </button>
+          <button id="calculateGrades" class="button button-primary" type="button">
+            計算成績
+          </button>
+        </div>
+
+        <div class="grade-summary">
+          <span>加權平均</span>
+          <strong id="gradeAverage">—</strong>
+          <p id="gradeMessage">請輸入成績後計算。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="privacy-note">
+        <strong>資料儲存說明</strong>
+        <p>公告、考試與抽座位狀態儲存在本機瀏覽器。更換裝置、瀏覽器或清除網站資料後，紀錄可能不會保留。網站不提供跨裝置同步。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>CLASSROOM · 班級數位平台</p>
+    <p>一起學習，一起成長。</p>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
