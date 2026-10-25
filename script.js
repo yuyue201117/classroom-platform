@@ -3,7 +3,7 @@
 
 // 請先修改這個管理者密碼。
 // 注意：這只是前端介面限制，不是真正安全的身分驗證。
-const ADMIN_PASSWORD = "change-this-password";
+const ADMIN_PASSWORD = "my1117";
 
 const STORAGE_KEY = "classroom-platform-v1";
 const $ = (id) => document.getElementById(id);
